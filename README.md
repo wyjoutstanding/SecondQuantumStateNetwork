@@ -62,6 +62,4 @@ To run the demo, execute the following script:
 ./run.sh
 ```
 
-The script will evaluate the H2 molecule on various basis sets and save the results in the `./logger` directory. The results include the energy and convergence information for each basis set, as well as the time taken for each calculation.
-
-Please note that the demo may take some time to run, depending on your hardware, the size of the basis sets, learning rate, batch size (for larger molecules).
+The script will evaluate the H2 molecule on various basis sets and save the results in the `./logger` directory. The results include the energy and convergence information for each basis set, as well as the time taken for each calculation. Please note that the demo may take some time to run, depending on your hardware, the size of the basis sets, number of training iterations (learning rate), batch size (for larger molecules).
