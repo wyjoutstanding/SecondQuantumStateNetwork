@@ -1,6 +1,8 @@
 # SCALABLE NEURAL QUANTUM STATES ARCHITECTURE FOR QUANTUM CHEMISTRY
 
-This repository contains the code for the paper "Scalable neural quantum states architecture for quantum chemistry" by Tianchen Zhao, Giuseppe Carleo, James Stokes, and Shravan Veerapaneni. The paper proposes a scalable architecture for training neural quantum states for quantum chemistry calculations.
+Tianchen Zhao, James Stokes, Shravan Veerapaneni
+
+This repository includes the codes for the paper "Scalable neural quantum states architecture for quantum chemistry" (https://arxiv.org/pdf/2208.05637.pdf).
 
 ## How to Use
 
@@ -62,4 +64,4 @@ To run the demo, execute the following script:
 
 The script will evaluate the H2 molecule on various basis sets and save the results in the `./logger` directory. The results include the energy and convergence information for each basis set, as well as the time taken for each calculation.
 
-Please note that the demo may take some time to run, depending on your hardware and the size of the basis sets. Additionally, the convergence information may be useful for assessing the accuracy of the model, but it may not be immediately interpretable without further analysis.
+Please note that the demo may take some time to run, depending on your hardware, the size of the basis sets, learning rate, batch size (for larger molecules).
