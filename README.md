@@ -44,8 +44,8 @@ To set up the environment, follow these instructions:
     ```
     curl "http://vergil.chemistry.gatech.edu/psicode-download/Psi4conda-1.7-py38-Linux-x86_64.sh" -o Psi4conda-1.7-py38-Linux-x86_64.sh --keepalive-time 2
     bash Psi4conda-1.7-py38-Linux-x86_64.sh -b -p $HOME/psi4conda
-    echo $'. $HOME/psi4conda/etc/profile.d/conda.sh\nconda activate vmc_fnc' >> ~/.bashrc
-    echo "source $HOME/psi4conda/etc/profile.d/conda.csh\nconda activate vmc_fnc" >> ~/.tcshrc
+    echo $'. $HOME/psi4conda/etc/profile.d/conda.sh\nconda activate' >> ~/.bashrc
+    echo "source $HOME/psi4conda/etc/profile.d/conda.csh\nconda activate" >> ~/.tcshrc
     ```
 
 - Verify that Psi4 is working correctly:
