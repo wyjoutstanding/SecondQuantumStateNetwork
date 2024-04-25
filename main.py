@@ -80,7 +80,7 @@ def main(cfg):
     else:
         run_trials(0, cfg)
     logging.info('--------------- Finished ---------------')
-
+    
 
 if __name__ == '__main__':
     # command line arguments

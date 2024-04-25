@@ -105,17 +105,29 @@ class MADE(Base):
         condition2_down = (inp_cumsum_down >= upper_bound_down).float()
         idx = torch.sort(self.shell_order)[1]
         # first entry must be down
-        log_psi_cond[:,:,0].masked_fill_(condition1_up[:,idx]==1, float('-inf'))
-        log_psi_cond[:,:,2].masked_fill_(condition1_up[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,0].masked_fill(condition1_up[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,2].masked_fill(condition1_up[:,idx]==1, float('-inf'))
         # second entry must be down
-        log_psi_cond[:,:,0].masked_fill_(condition1_down[:,idx]==1, float('-inf'))
-        log_psi_cond[:,:,1].masked_fill_(condition1_down[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,0].masked_fill(condition1_down[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,1].masked_fill(condition1_down[:,idx]==1, float('-inf'))
         # first entry must be up
-        log_psi_cond[:,:,1].masked_fill_(condition2_up[:,idx]==1, float('-inf'))
-        log_psi_cond[:,:,3].masked_fill_(condition2_up[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,1].masked_fill(condition2_up[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,3].masked_fill(condition2_up[:,idx]==1, float('-inf'))
         # second entry must be up
-        log_psi_cond[:,:,2].masked_fill_(condition2_down[:,idx]==1, float('-inf'))
-        log_psi_cond[:,:,3].masked_fill_(condition2_down[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,2].masked_fill(condition2_down[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,3].masked_fill(condition2_down[:,idx]==1, float('-inf'))
+        # # first entry must be down
+        # log_psi_cond[:,:,0].masked_fill_(condition1_up[:,idx]==1, float('-inf'))
+        # log_psi_cond[:,:,2].masked_fill_(condition1_up[:,idx]==1, float('-inf'))
+        # # second entry must be down
+        # log_psi_cond[:,:,0].masked_fill_(condition1_down[:,idx]==1, float('-inf'))
+        # log_psi_cond[:,:,1].masked_fill_(condition1_down[:,idx]==1, float('-inf'))
+        # # first entry must be up
+        # log_psi_cond[:,:,1].masked_fill_(condition2_up[:,idx]==1, float('-inf'))
+        # log_psi_cond[:,:,3].masked_fill_(condition2_up[:,idx]==1, float('-inf'))
+        # # second entry must be up
+        # log_psi_cond[:,:,2].masked_fill_(condition2_down[:,idx]==1, float('-inf'))
+        # log_psi_cond[:,:,3].masked_fill_(condition2_down[:,idx]==1, float('-inf'))
         return log_psi_cond
 
     @torch.no_grad()

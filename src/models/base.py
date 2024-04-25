@@ -5,8 +5,6 @@ from backpack import backpack
 from backpack.extensions import BatchGrad
 from src.vmc.objective.hamiltonian import Energy
 
-
-
 class Base(nn.Module):
     def __init__(self, **kwargs):
         super().__init__()
@@ -17,6 +15,7 @@ class Base(nn.Module):
         pass
 
     def log_dev(self, log_psi, model, imag=False):
+        # import pdb; pdb.set_trace()
         device = log_psi.device
         bs, log_psi_shape = log_psi.shape[0], log_psi.shape[-1]
         log_psi_real_or_imag = log_psi[:, imag].sum()

@@ -1,47 +1,30 @@
-# SCALABLE NEURAL QUANTUM STATES ARCHITECTURE FOR QUANTUM CHEMISTRY
-
-Tianchen Zhao, James Stokes, Shravan Veerapaneni
-
-This repository includes the codes for the paper "Scalable neural quantum states architecture for quantum chemistry" (https://arxiv.org/pdf/2208.05637.pdf).
-
+# Second Quantum States Network Framework for Quantum Chemistry
+General second quantum states network framework for quantum chemistry.
+Support Variational Monte Carlo optimizations:
+- Sampling: Batch Autoregressive Sampling
+- Local energy calculation: based on Pauli strings, support CPU and GPU
+- gradient: support by PyTorch
+- Optimizer: Stochastic Reconfiguration and gradient descent optimizer(e.g. AdamW, SGD...)
+  
 ## How to Use
-
-To use this code, follow these steps:
-
-1. Download this repository.
-
-    ```
-    git clone https://github.com/Ericolony/made-qchem.git
-    ```
-
-2. Navigate to the working directory.
-
-    ```
-    cd made-qchem
-    ```
 
 ### 1. Environment Setup
 
 To set up the environment, follow these instructions:
-
-- Make sure your operating system meets the requirements for PyTorch 1.12.0 and CUDA 11.6.
-
-- Install the required packages using pip and conda:
-
+#### Install Psi4 conda environment
+- Download and install Psi4 for WSL example:
+    ```shell
+    #download via button above  -OR-  following line
+    curl "http://vergil.chemistry.gatech.edu/psicode-download/Psi4conda-1.9.1-py38-WindowsWSL-x86_64.sh" -o Psi4conda-1.9.1-py38-WindowsWSL-x86_64.sh --keepalive-time 2
+    bash Psi4conda-1.9.1-py38-WindowsWSL-x86_64.sh -b -p $HOME/psi4conda
+    echo $'. $HOME/psi4conda/etc/profile.d/conda.sh\nconda activate' >> ~/.bashrc
+    echo "source $HOME/psi4conda/etc/profile.d/conda.csh\nconda activate" >> ~/.tcshrc
+    # log out, log back in so conda and psi4 in path
+    psi4 --test
     ```
-    pip install numpy
-    conda install pytorch==1.12.0 torchvision==0.13.0 torchaudio==0.12.0 cudatoolkit=11.6 -c pytorch -c conda-forge
-    pip install torch torchvision torchaudio
-    pip install tensorboardX
-    pip install backpack-for-pytorch
-    pip install pytorch-model-summary
-    pip install openfermionpsi4
-    pip install yacs
-    ```
+- Download and install Psi4 for general linux example:
 
-- Download and install Psi4:
-
-    ```
+    ```shell
     curl "http://vergil.chemistry.gatech.edu/psicode-download/Psi4conda-1.7-py38-Linux-x86_64.sh" -o Psi4conda-1.7-py38-Linux-x86_64.sh --keepalive-time 2
     bash Psi4conda-1.7-py38-Linux-x86_64.sh -b -p $HOME/psi4conda
     echo $'. $HOME/psi4conda/etc/profile.d/conda.sh\nconda activate' >> ~/.bashrc
@@ -53,12 +36,30 @@ To set up the environment, follow these instructions:
     ```
     psi4 --test
     ```
+#### Install python packages based on Psi4 conda **environment**
+- Install the required packages using pip and conda:
+
+    ```shell
+    pip install -r requirements.txt
+    # backpack_for_pytorch==1.6.0
+    # numpy==1.24.4
+    # openfermion==1.6.1
+    # openfermionpsi4==0.5
+    # PubChemPy==1.0.4
+    # pytorch_model_summary==0.1.2
+    # scipy==1.13.0
+    # tensorboardX==2.6.2.2
+    # torch==1.12.0
+    # tqdm==4.66.1
+    # yacs==0.1.8
+    ```
+<!-- pip install tensorboardX backpack-for-pytorch pytorch-model-summary openfermionpsi4  yacs torch -->
 
 ### 2. Demo
 
 To run the demo, execute the following script:
 
-```
+```shell
 ./run.sh
 ```
 

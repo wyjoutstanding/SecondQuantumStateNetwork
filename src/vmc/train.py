@@ -59,6 +59,10 @@ def train_one_batch(model, sampler, hamiltonian, optimizer, scheduler, sr, batch
         # train
         local_energies, log_psi = hamiltonian.compute_local_energy(sbs_samples, model)
         log_psi_conj = torch.stack((log_psi[:, 0], -log_psi[:, 1]), dim=-1)
+        # res_r = model.log_dev_real(log_psi_conj, model)
+        # res_i = model.log_dev_imag(log_psi_conj, model)
+        # print(f"res: {res_r.shape} {res_i.shape}")
+        # print(f"res: {res_r.shape}")
         wt = sbs_weight.unsqueeze(-1)
         loss = 2 * (real(scalar_mult(log_psi_conj, (local_energies - nmlzr).detach()) * wt)).sum()
         # if epoch > 2000:
@@ -149,6 +153,7 @@ def train(cfg, local_rank, global_rank):
     if world_size > 1:
         print("The local rank here is {}".format(local_rank))
         model = DistributedDataParallel(model, device_ids=[local_rank])
+    print(f"log_dir: {logger_dir}")
     # tensorboard
     if global_rank == 0:
         tensorboard = SummaryWriter(log_dir=logger_dir)
