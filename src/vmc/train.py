@@ -92,8 +92,6 @@ def train_one_batch(model, sampler, hamiltonian, optimizer, scheduler, sr, batch
         losses['num_uniq'] = samples.shape[0]
     return losses
 
-
-
 def train(cfg, local_rank, global_rank):
     # set hyper-parameters
     # settings

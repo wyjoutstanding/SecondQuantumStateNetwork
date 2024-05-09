@@ -18,8 +18,8 @@ def get_model(model_name: str, device: str, print_model_info: bool, **kwargs) ->
     Returns:
     - model: The loaded PyTorch model.
     """
-    if model_name == 'naqs_unofficial':
-        from .naqs_unofficial import NADE
+    if model_name == 'naqs':
+        from .naqs import NADE
         model = NADE(**kwargs)
     elif model_name == 'made':
         from .made import MADE

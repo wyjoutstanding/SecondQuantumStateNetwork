@@ -76,7 +76,10 @@ class MADE(Base):
         logits_cls = self.net(x).reshape(-1, self.num_sites//2, 4) # bs, num_sites/2, 4
         if (self.num_spin_up + self.num_spin_down) >= 0:
             log_psi_cond = self.apply_constraint(x, logits_cls)
+        # print(f"1 log_psi_cond: {log_psi_cond.shape} logits_cls: {logits_cls.shape}")
         log_psi_cond = 0.5 * self.log_softmax(logits_cls)
+        # print(f"2 log_psi_cond: {log_psi_cond.shape} {log_psi_cond}")
+        # print(f"log_psi_cond: {log_psi_cond}")
         if self.sampling:
             prob_cond = (2 * log_psi_cond).exp()
             return prob_cond
@@ -105,17 +108,29 @@ class MADE(Base):
         condition2_down = (inp_cumsum_down >= upper_bound_down).float()
         idx = torch.sort(self.shell_order)[1]
         # first entry must be down
-        log_psi_cond[:,:,0].masked_fill(condition1_up[:,idx]==1, float('-inf'))
-        log_psi_cond[:,:,2].masked_fill(condition1_up[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,0] = log_psi_cond[:,:,0].masked_fill(condition1_up[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,2] = log_psi_cond[:,:,2].masked_fill(condition1_up[:,idx]==1, float('-inf'))
         # second entry must be down
-        log_psi_cond[:,:,0].masked_fill(condition1_down[:,idx]==1, float('-inf'))
-        log_psi_cond[:,:,1].masked_fill(condition1_down[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,0] = log_psi_cond[:,:,0].masked_fill(condition1_down[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,1] = log_psi_cond[:,:,1].masked_fill(condition1_down[:,idx]==1, float('-inf'))
         # first entry must be up
-        log_psi_cond[:,:,1].masked_fill(condition2_up[:,idx]==1, float('-inf'))
-        log_psi_cond[:,:,3].masked_fill(condition2_up[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,1] = log_psi_cond[:,:,1].masked_fill(condition2_up[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,3] = log_psi_cond[:,:,3].masked_fill(condition2_up[:,idx]==1, float('-inf'))
         # second entry must be up
-        log_psi_cond[:,:,2].masked_fill(condition2_down[:,idx]==1, float('-inf'))
-        log_psi_cond[:,:,3].masked_fill(condition2_down[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,2] = log_psi_cond[:,:,2].masked_fill(condition2_down[:,idx]==1, float('-inf'))
+        log_psi_cond[:,:,3] = log_psi_cond[:,:,3].masked_fill(condition2_down[:,idx]==1, float('-inf'))
+        # # first entry must be down
+        # log_psi_cond[:,:,0].masked_fill(condition1_up[:,idx]==1, float('-inf'))
+        # log_psi_cond[:,:,2].masked_fill(condition1_up[:,idx]==1, float('-inf'))
+        # # second entry must be down
+        # log_psi_cond[:,:,0].masked_fill(condition1_down[:,idx]==1, float('-inf'))
+        # log_psi_cond[:,:,1].masked_fill(condition1_down[:,idx]==1, float('-inf'))
+        # # first entry must be up
+        # log_psi_cond[:,:,1].masked_fill(condition2_up[:,idx]==1, float('-inf'))
+        # log_psi_cond[:,:,3].masked_fill(condition2_up[:,idx]==1, float('-inf'))
+        # # second entry must be up
+        # log_psi_cond[:,:,2].masked_fill(condition2_down[:,idx]==1, float('-inf'))
+        # log_psi_cond[:,:,3].masked_fill(condition2_down[:,idx]==1, float('-inf'))
         # # first entry must be down
         # log_psi_cond[:,:,0].masked_fill_(condition1_up[:,idx]==1, float('-inf'))
         # log_psi_cond[:,:,2].masked_fill_(condition1_up[:,idx]==1, float('-inf'))
@@ -128,6 +143,8 @@ class MADE(Base):
         # # second entry must be up
         # log_psi_cond[:,:,2].masked_fill_(condition2_down[:,idx]==1, float('-inf'))
         # log_psi_cond[:,:,3].masked_fill_(condition2_down[:,idx]==1, float('-inf'))
+        # inf_sum = (log_psi_cond == float('-inf')).sum()
+        # print(f"inf_sum: {inf_sum}")
         return log_psi_cond
 
     @torch.no_grad()

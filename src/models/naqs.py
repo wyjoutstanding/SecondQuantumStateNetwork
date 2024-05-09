@@ -5,6 +5,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
+from .base import Base
 
 def multinomial_arr(count, p):
     # count: [num_uniqs], p: [num_uniqs, probs]
@@ -59,7 +60,7 @@ class OrbitalBlock(nn.Module):
         return self.layers(x)
 
 
-class NADE(nn.Module):
+class NADE(Base):
     def __init__(self, num_sites, num_spin_up, num_spin_down, hidden_size, hidden_depth, ablation_idx):
         super(NADE, self).__init__()
         self.num_sites = num_sites

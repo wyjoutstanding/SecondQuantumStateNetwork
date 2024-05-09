@@ -1,4 +1,4 @@
-from .automatic import Automatic, parse_hamiltonian_string
+from .hamiltonian import MolecularHamiltoian, parse_hamiltonian_string
 
 def get_hamiltonian(**kwargs):
     """
@@ -10,4 +10,4 @@ def get_hamiltonian(**kwargs):
         Hamiltonian: An instance of Hamiltonian.
     """
     matrix, coefficients = parse_hamiltonian_string(**kwargs)
-    return Automatic(matrix, coefficients)
+    return MolecularHamiltoian(matrix, coefficients)
