@@ -10,9 +10,39 @@ class Base(nn.Module):
         super().__init__()
         self.energy = Energy.apply
         self.sampler_type = 'MCMC'
+        self.sampling = False
 
-    def forward(self, configuration):
-        pass
+    def set_sampling(self, flag=True):
+        self.sampling = flag
+
+    def forward(self, configurations):
+        r"""
+        Args:
+            configurations: Tensor of shape [batch_size, n_qubits]
+                            Each element is either +1 or -1, where +1 indicates an occupied qubit.
+        Returns: 
+            ln_psi: Tensor of shape [batch_size, 2], representing the natural logarithm of the (ln|ψ and phase). The output is in a complex format, where the second dimension represents the ln(amplitude) and phase parts.
+        
+        Example:
+            configurations = torch.tensor([[1, -1, 1, -1], [-1, 1, -1, 1]])
+            ln_psi = model.forward(configurations)
+        """
+        raise NotImplementedError()
+
+    def sample(self, batch_size=1e12):
+        r"""
+        Args:
+            batch_size: the number of samples to generate. Default is 1e12.
+        
+        Returns:
+            configurations: Tensor of shape [:, n_qubits], representing the sampled configurations.
+                            Each row is a sampled configuration where each element is either +1 or -1.
+        
+        Example:
+            model.set_sampling(True)
+            sampled_configs = model.sample(batch_size=1000)
+        """
+        raise NotImplementedError()
 
     def log_dev(self, log_psi, model, imag=False):
         # import pdb; pdb.set_trace()
