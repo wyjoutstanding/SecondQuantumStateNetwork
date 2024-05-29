@@ -11,6 +11,9 @@ _C.SYSTEM.NUM_WORKERS = 0
 # Random seed
 _C.SYSTEM.RANDOM_SEED = 0
 
+_C.HAMILTONIAN = CN()
+_C.HAMILTONIAN.TYPE = 'exact'
+
 ''' Miscellaneous '''
 _C.MISC = CN()
 # Functionality mode

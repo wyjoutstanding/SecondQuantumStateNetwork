@@ -2,15 +2,33 @@ import torch
 import torch.nn as nn
 import numpy as np
 import itertools
+from typing import Union
 
 import src.complex as cplx
 
+try:
+    import interface.python.eloc as eloc
+except ImportError:
+    pass
+
 class Hamiltonian(nn.Module):
-    def __init__(self):
+    def __init__(self, ham_path: str):
         super().__init__()
+        self.n_qubits = -1
+
+    def get_n_qubits(self):
+        return self.n_qubits
 
     def forward(self, config):
-        # TODO: Implement forward pass for Hamiltonian
+        raise NotImplementedError()
+
+    def compute_local_energy(self, wf, states: Union[torch.tensor, np.ndarray], ln_psis: torch.tensor=None, *args, **kwargs):
+        raise NotImplementedError()
+
+    def free_hamiltonian(self):
+        pass
+    
+    def set_device(self, *args, **kwargs):
         pass
 
 class Energy(torch.autograd.Function):
@@ -180,7 +198,6 @@ def dense_hamiltonian(num_sites, hmtn_ops, coefs, unique_flips, select_idx, num_
     pauli_y_idx = (hmtn_ops==2).int()
     pauli_z_idx = (hmtn_ops==3).int()
     for i in range(size):
-        print(i)
         x = inputs[i]
         for j in range(size):
             xx = inputs[j]
@@ -194,7 +211,24 @@ def dense_hamiltonian(num_sites, hmtn_ops, coefs, unique_flips, select_idx, num_
             mtx[i,j] = (cond * val * coefs.detach().cpu().numpy()).sum()
     return mtx
 
+class MolecularHamiltonianCPP(Hamiltonian):
+    def __init__(self, ham_path: str):
+        super().__init__(ham_path)
+        self.n_qubits = eloc.init_hamiltonian(ham_path)
 
+    def compute_local_energy(self, states: Union[torch.tensor, np.ndarray], model, *args, **kwargs):
+        # torch.autograd.set_detect_anomaly(True)
+        ln_psis = model(states)
+        # states *= -1
+        with torch.no_grad():
+            psis = cplx.exp(ln_psis.clone().detach())
+            psis = cplx.torch_to_numpy(psis)
+            elocs = eloc.calculate_local_energy(states*-1, psis, is_need_sort=True, *args, **kwargs)
+            elocs = cplx.np_to_torch(elocs)
+        return elocs, ln_psis
+
+    def free_hamiltonian(self):
+        return eloc.free_hamiltonian()
 
 if __name__ == '__main__':
     pass

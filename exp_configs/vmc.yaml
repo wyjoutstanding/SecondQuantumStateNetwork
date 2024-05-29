@@ -4,6 +4,9 @@ SYSTEM:
   NUM_WORKERS: 8
   RANDOM_SEED: 666
 
+HAMILTONIAN:
+  TYPE: 'exact' # 'libeloc'|'exact'
+
 MISC:
   MODE: 'train'
   LOG_INTERVAL: 0

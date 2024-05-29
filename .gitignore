@@ -5,3 +5,4 @@ logger/**
 results/**
 *.dat
 *.log
+*.so

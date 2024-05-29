@@ -27,7 +27,7 @@ from src.optimizers.util import apply_grad, vec_to_grad
 
 MCMC_MODELS = ['rbm', 'rbm_c']
 
-def train_one_batch(model, sampler, hamiltonian, optimizer, scheduler, sr, batch_size, num_samples, ablation_idx, inner_iter, global_rank, world_size, temp_path, nmlzr, epoch):
+def train_one_batch(model, sampler, hamiltonian, optimizer, scheduler, sr, batch_size, num_samples, ablation_idx, inner_iter, global_rank, world_size, temp_path, nmlzr, epoch, hamiltonian_type='exact'):
     model.train()
     losses = {}
     device = list(model.parameters())[0].device
@@ -56,6 +56,7 @@ def train_one_batch(model, sampler, hamiltonian, optimizer, scheduler, sr, batch
         sbs_weight = weight[i*sbs:(i+1)*sbs]
         if sr is not None:
             model = extend(model)
+        assert sr is None
         # train
         local_energies, log_psi = hamiltonian.compute_local_energy(sbs_samples, model)
         log_psi_conj = torch.stack((log_psi[:, 0], -log_psi[:, 1]), dim=-1)
@@ -100,6 +101,8 @@ def train(cfg, local_rank, global_rank):
     eval_itvl = cfg.EVAL.EVALUATION_INTERVAL
     device = torch.device('cuda:{}'.format(local_rank) if (cfg.SYSTEM.NUM_GPUS > 0) else 'cpu')
     world_size = cfg.DDP.WORLD_SIZE
+    hamiltonian_type = cfg.HAMILTONIAN.TYPE
+
     # train
     lr = cfg.TRAIN.LEARNING_RATE
     num_epochs = cfg.TRAIN.NUM_EPOCHS
@@ -171,7 +174,7 @@ def train(cfg, local_rank, global_rank):
         nmlzr, mean, std, max, avg_accept, num_uniq = test(model, sampler, hamiltonian, test_bs, num_samples, inner_iter, world_size)
         # train
         start_time = time.time()
-        losses = train_one_batch(model, sampler, hamiltonian, optimizer, scheduler, sr, bs, num_samples, ablation_idx, inner_iter, global_rank, world_size, temp_path, nmlzr, epoch)
+        losses = train_one_batch(model, sampler, hamiltonian, optimizer, scheduler, sr, bs, num_samples, ablation_idx, inner_iter, global_rank, world_size, temp_path, nmlzr, epoch, hamiltonian_type=hamiltonian_type)
         end_time = time.time()
         time_elapsed += end_time - start_time
         if global_rank == 0:

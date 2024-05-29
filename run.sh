@@ -1,8 +1,11 @@
 #!/bin/bash
+set -x
 
 MOLECULE_LIST=(
-    'H2' # 783
-    # "H2O" # 962
+    #'H2' # 783
+    #'Lithium hydride'
+    'LiH'
+    #"H2O" # 962
     # "O2" # 977
     # "CO2" # 280
     # "CH4" # 297
@@ -28,9 +31,10 @@ do
             --config_file './exp_configs/vmc.yaml' SYSTEM.RANDOM_SEED 666 MISC.NUM_TRIALS 1 MISC.SAME_LOCAL_SEED 'True'
             DDP.WORLD_SIZE 1 DDP.NODE_IDX 0 DDP.LOCAL_WORLD_SIZE 1 SYSTEM.NUM_GPUS 0 DDP.MASTER_ADDR 'vqmc-chemistry' DDP.MASTER_PORT 12653
             MODEL.MODEL_NAME 'made' MODEL.HIDDEN_DEPTH 1 MODEL.HIDDEN_WIDTH 64
+            #MODEL.MODEL_NAME 'naqs' MODEL.HIDDEN_DEPTH 1 MODEL.HIDDEN_WIDTH 64
             DATA.MOLECULE "${MOLECULE}" DATA.BASIS "${BASIS}" DATA.NUM_SAMPLES 1e12
             TRAIN.NUM_EPOCHS 1000 TRAIN.LEARNING_RATE 0.0005 TRAIN.OPTIMIZER_NAME 'adam' TRAIN.APPLY_SR 'False' TRAIN.BATCH_SIZE 500 TRAIN.INNER_ITER 1 TRAIN.ENABLE_UNIQS 'True'
-            # TRAIN.NUM_EPOCHS 1000 TRAIN.LEARNING_RATE 0.0005 TRAIN.OPTIMIZER_NAME 'adam' TRAIN.APPLY_SR 'True' TRAIN.BATCH_SIZE 500 TRAIN.INNER_ITER 1 TRAIN.ENABLE_UNIQS 'True'
+            HAMILTONIAN.TYPE 'libeloc' # for local energy library
         )
         #CUDA_VISIBLE_DEVICES=0 python -m main "${args[@]}"
         python -m main "${args[@]}"

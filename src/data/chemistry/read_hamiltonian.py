@@ -7,6 +7,7 @@ import openfermionpsi4 as ofpsi4
 from openfermion.chem import MolecularData
 from openfermion.transforms import get_fermion_operator, jordan_wigner
 
+from src.util import save_binary_qubit_op, read_binary_qubit_op
 
 BASIS_LIST = [
     'STO-3G',
@@ -25,6 +26,7 @@ BASIS_LIST = [
 
 MOLECULE_CID = {
     'H2': 783,
+    'LiH': 62714,
     "H2O": 962,
     "O2": 977,
     "CO2": 280,
@@ -45,7 +47,7 @@ def get_molecule_geometry(name):
     return geometry
 
 
-def load_molecule(molecule_name, basis, data_path):
+def load_molecule(molecule_name, basis, data_path=None, hamiltonian_type='exact'):
     multiplicity = 1 if molecule_name not in ["O2","CH2"] else 3
     geometry = get_molecule_geometry(molecule_name)
     save_name = './datasets/chemistry/{}/{}'.format(basis, molecule_name)
@@ -87,5 +89,9 @@ def load_molecule(molecule_name, basis, data_path):
     logging.info("Compressing... at {:.2f} seconds".format(time.time()-t_start))
     qubit_hamiltonian.compress()
     logging.info("done in {:.2f} seconds".format(time.time()-t_start))
-    return molecule, qubit_hamiltonian
-
+    if hamiltonian_type == 'exact':
+        return molecule, qubit_hamiltonian
+    else:
+        qubit_op_fname = f"{molecule_name}-qubit_op.data"
+        save_binary_qubit_op(qubit_hamiltonian, qubit_op_fname)
+        return molecule, qubit_op_fname

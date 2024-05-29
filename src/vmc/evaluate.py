@@ -3,7 +3,7 @@ import torch
 
 from src.complex import real
 
-def test(model, sampler, hamiltonian, batch_size, num_samples, inner_iter, world_size):
+def test(model, sampler, hamiltonian, batch_size, num_samples, inner_iter, world_size, hamiltonian_type='exact'):
     device = list(model.parameters())[0].device
     model.eval()
     with torch.no_grad():
